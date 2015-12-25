@@ -221,7 +221,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         Log.d("GettingLocation", "onConnectionFailed");
     }
     //Open file for reading
-    //TODO: change values
+    //TODO: change val`s
     public void fileRead (){
 
         try {
@@ -284,8 +284,6 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
     @Override
     public boolean onMarkerClick(Marker marker) {
 
-        //  Toast.makeText(getApplicationContext(), "this is my Toast message!!! =)",
-        //         Toast.LENGTH_LONG).show();
         return false;
     }
 

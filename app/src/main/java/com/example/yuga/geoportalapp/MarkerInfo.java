@@ -27,7 +27,7 @@ public class MarkerInfo extends AppCompatActivity {
         idReceived = getIntent().getIntExtra("id", 0);
         namereceived = getIntent().getStringExtra("markername");
         markerReceivedGoogleID = getIntent().getStringExtra("MarkerGoogleID");
-        markerSnippetReceived = getIntent().getStringExtra("snippet"); //забираю з попереднього актівіті ІД маркера в глобальний стрінг
+        markerSnippetReceived = getIntent().getStringExtra("snippet");
 
         viewMarkerInfo();
 
@@ -52,12 +52,11 @@ public class MarkerInfo extends AppCompatActivity {
         finish();
     }
 
-    //TODO: переписати код зі своїми іменами
-    //Open file to read mode
+
     // відкриваю файл на читання - зчитую в стрінг. Потім іфом в циклі шукаю в стрічці з файлу інформацію по даному ІД маркера
     //коли найду потрібне ІД то циклом витягую інфу в іншу стрічку поки не побачу нове ІД
     //І виводжу в окремі текст в'ю
-    //TODO: погуглити як динамічно додавати текст в'ю і текст едіт в актівіті
+    
     public void viewMarkerInfo (){
         //TextView txtData;
         // txtData = (TextView) findViewById(R.id.txtData);
