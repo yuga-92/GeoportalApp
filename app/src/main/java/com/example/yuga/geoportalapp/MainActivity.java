@@ -389,7 +389,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
     @Override
     public void onInfoWindowClick(Marker marker) {
 
-        Intent intent1 = new Intent(this, marker_info.class);
+        Intent intent1 = new Intent(this, MarkerInfo.class);
 
         String markerSnippet = marker.getSnippet();
 

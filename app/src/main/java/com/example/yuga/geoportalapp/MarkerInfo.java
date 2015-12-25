@@ -13,7 +13,7 @@ import org.json.JSONObject;
 
 import java.util.Iterator;
 
-public class marker_info extends AppCompatActivity {
+public class MarkerInfo extends AppCompatActivity {
 
     String markerSnippetReceived;
     String markerReceivedGoogleID;

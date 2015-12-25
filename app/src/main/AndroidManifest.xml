@@ -39,7 +39,7 @@
         </activity>
         <activity android:name=".EditActivity" >
         </activity>
-        <activity android:name=".marker_info" >
+        <activity android:name=".MarkerInfo" >
         </activity>
     </application>
 

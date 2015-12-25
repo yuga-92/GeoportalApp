@@ -9,11 +9,9 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -144,7 +142,6 @@ public class EditActivity extends AppCompatActivity {
 
 
         try {
-
             myFile.delete();
             myFile.createNewFile();
             FileWriter fw = new FileWriter(myFile.getAbsoluteFile());
