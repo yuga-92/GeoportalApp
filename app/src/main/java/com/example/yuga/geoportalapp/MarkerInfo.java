@@ -56,7 +56,7 @@ public class MarkerInfo extends AppCompatActivity {
     // відкриваю файл на читання - зчитую в стрінг. Потім іфом в циклі шукаю в стрічці з файлу інформацію по даному ІД маркера
     //коли найду потрібне ІД то циклом витягую інфу в іншу стрічку поки не побачу нове ІД
     //І виводжу в окремі текст в'ю
-    
+
     public void viewMarkerInfo (){
         //TextView txtData;
         // txtData = (TextView) findViewById(R.id.txtData);

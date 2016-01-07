@@ -1,11 +1,9 @@
 package com.example.yuga.geoportalapp;
 
 import android.app.Dialog;
-import android.content.Context;
 import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
-import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
@@ -30,105 +28,31 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.InputStreamReader;
-
 public class MainActivity extends AppCompatActivity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, GoogleMap.OnMarkerClickListener, GoogleMap.OnMapClickListener, GoogleMap.OnMapLongClickListener, GoogleMap.OnInfoWindowClickListener {
-
-
+//TODO extract Google Play Services in other class file
     private static final int ERROR_DIALOG_REQUEST = 1;
     //map object
     GoogleMap mMap;
     GoogleApiClient mGoogleApiClient;
     //Location object used for getting latitude and longitude
     Location mLastLocation;
-    String markersData;
     String markerID;
-    int i = 0;
-    final Context context = this;
-    private String mark_name = null;
+    String outputFile;
     private GoogleMap googleMap;
-
-
-    ///// Setting infowindow adapter
-    private class CustomInfoWindowAdapter implements GoogleMap.InfoWindowAdapter {
-
-        private View view;
-
-        public CustomInfoWindowAdapter() {
-            view = getLayoutInflater().inflate(R.layout.custom_infowindow,
-                    null);
-        }
-
-        @Override
-        public View getInfoContents(Marker marker) {
-            final String title = marker.getTitle();
-            final TextView titleUi = ((TextView) view.findViewById(R.id.title));
-            if (title != null) {
-                titleUi.setText(title);
-            } else {
-                titleUi.setText("");
-            }
-
-
-            final TextView snippetUi = ((TextView) view
-                    .findViewById(R.id.snippet));
-
-            snippetUi.setText("Touch this to view additional info");
-
-
-            return view;
-        }
-
-        @Override
-        public View getInfoWindow(final Marker marker) {
-        //Not used now. For custom view of infowindow
-
-            final String title = marker.getTitle();
-            final TextView titleUi = ((TextView) view.findViewById(R.id.title));
-            if (title != null) {
-                titleUi.setText(title);
-            } else {
-                titleUi.setText("");
-            }
-
-
-            final TextView snippetUi = ((TextView) view
-                    .findViewById(R.id.snippet));
-
-            snippetUi.setText("Touch this to view additional info");
-
-
-            return null;
-        }
-    }
-
-    //////end
-
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        MarkerFile.fileRead();
         buildGoogleApiClient();
         googleMap = ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map))
                 .getMap();
-        if ( googleMap != null ) {
-
-            googleMap.setInfoWindowAdapter(new CustomInfoWindowAdapter());
-        }
+       if ( googleMap != null ) googleMap.setInfoWindowAdapter( new CustomInfoWindowAdapter());
 
     }
 
-    protected synchronized void buildGoogleApiClient() {
+     protected synchronized void buildGoogleApiClient() {
         mGoogleApiClient = new GoogleApiClient.Builder(this)
                 .addConnectionCallbacks(this)
                 .addOnConnectionFailedListener(this)
@@ -141,8 +65,6 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         CameraUpdate update= CameraUpdateFactory.newLatLngZoom(latLng,zoom);
         mMap.moveCamera(update);
     }
-
-    //Checking the google play services is available
 
     private boolean checkServices() {
 
@@ -159,8 +81,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         return false;
     }
 
-
-    //Initializing map
+    //Checking the google play services is available
 
     private boolean initMap() {
         if (mMap == null) {
@@ -169,9 +90,9 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
 
         }
         return (mMap!=null);
-
     }
 
+    //Initializing map
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -181,7 +102,6 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
 
     @Override
     public void onConnected(Bundle bundle) {
-
         mLastLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
         if (mLastLocation != null) {
             //getting the latitude value
@@ -197,18 +117,14 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
                     mMap.setOnMapClickListener(this);
                     mMap.setOnMapLongClickListener(this);
                     mMap.setOnInfoWindowClickListener(this);
-                    fileRead();
                     try {
                         vievMarkers();
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
-
                 }
             }
-
         }
-
     }
 
     @Override
@@ -220,38 +136,14 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
     public void onConnectionFailed(ConnectionResult connectionResult) {
         Log.d("GettingLocation", "onConnectionFailed");
     }
-    //Open file for reading
-    //TODO: change val`s
-    public void fileRead (){
-
-        try {
-            File myFile = new File(Environment.getExternalStorageDirectory().getPath()+"/mysdfile.txt");
-
-            FileInputStream fIn = new FileInputStream(myFile);
-            BufferedReader myReader = new BufferedReader(
-                    new InputStreamReader(fIn));
-            String aDataRow = "";
-            String aBuffer = "";
-            while ((aDataRow = myReader.readLine()) != null) {
-                aBuffer += aDataRow + "\n";
-            }
-            // txtData.setText(aBuffer);
-            markersData = aBuffer;
-            myReader.close();
-        } catch (Exception e) {
-            Toast.makeText(getBaseContext(), e.getMessage(),
-                    Toast.LENGTH_SHORT).show();
-        }
-    }
 
     public  void vievMarkers () throws JSONException {
         JSONArray jsonArray;
-        jsonArray = new JSONArray(markersData);
+        jsonArray = new JSONArray(MarkerFile.markersData);
         for (int i = 0; i < jsonArray.length(); i++) {
             JSONObject jsonObj = jsonArray.getJSONObject(i);
             mMap.addMarker(new MarkerOptions()
                             .title(jsonObj.getString("name"))
-
                             .snippet(jsonObj.getJSONObject("content").toString())
                             .position(new LatLng(
                                     jsonObj.getJSONArray("latlng").getDouble(0),
@@ -259,16 +151,12 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
                             ))
             );
         }
-
     }
-
-
 
     @Override
     protected void onStart() {
         super.onStart();
         mGoogleApiClient.connect();
-
     }
 
     @Override
@@ -279,126 +167,92 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         }
     }
 
-
-
     @Override
     public boolean onMarkerClick(Marker marker) {
-
         return false;
     }
 
     @Override
     public void onMapClick(LatLng latLng) {
-        //  Toast.makeText(getApplicationContext(), "this is a click on the map! =)",
-        //         Toast.LENGTH_LONG).show();
-
-
     }
 
     @Override
     public void onMapLongClick(LatLng latLng) {
-        // getMarkerName(latLng, snippetOBJ);
-        String marker_name = mark_name;
-        String outputFile = "";
-        JSONObject snippetOBJ= new JSONObject();
         try {
-            snippetOBJ.put("clean","clean");
+            JsonParcer.snippetOBJ.put("clean", "clean");
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        // viewMarkers(latLng, snippetOBJ,marker_name);
         MarkerOptions marker;
-
         marker = new MarkerOptions()
                 .title("New marker at "+latLng.toString())
                 .position(latLng)
-                .snippet(String.valueOf(snippetOBJ))
+                .snippet(String.valueOf(JsonParcer.snippetOBJ))
                 .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));
-
         mMap.addMarker(marker);
-
-
-
-        JSONArray jsARR = null;
-        try {
-            jsARR = new JSONArray(markersData);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-
-        JSONObject jsObj1 = new JSONObject();
-        try {
-            jsObj1.put("name",marker.getTitle().toString());
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        try {
-            jsObj1.put("content", snippetOBJ);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        JSONArray latlngArr = new JSONArray();
-        try {
-            latlngArr.put(marker.getPosition().latitude);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        try {
-            latlngArr.put(marker.getPosition().longitude);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        try {
-            jsObj1.put("latlng",latlngArr);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        jsARR.put(jsObj1);
-
-        outputFile += jsARR.toString();
-        File myFile1 = new File(Environment.getExternalStorageDirectory().getPath()+"/mysdfile.txt");
-
-        try {
-            FileOutputStream fOut = new FileOutputStream(myFile1);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
-        try {
-            myFile1.delete();
-            myFile1.createNewFile();
-            FileWriter fw = new FileWriter(myFile1.getAbsoluteFile());
-            BufferedWriter bw = new BufferedWriter(fw);
-            bw.write(outputFile);
-            bw.close();
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        outputFile = JsonParcer.parceToOutput(JsonParcer.snippetOBJ,marker).toString();
+        MarkerFile.fileWrite(outputFile);
     }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (data == null) {return;}
         if (resultCode == 1) {
-            String name = data.getStringExtra("message");
-
+            String name = data.getStringExtra("message"); //not used yet
         }
 
     }
+
     @Override
     public void onInfoWindowClick(Marker marker) {
-
         Intent intent1 = new Intent(this, MarkerInfo.class);
-
         String markerSnippet = marker.getSnippet();
-
         intent1.putExtra("id", markerID);
-
         intent1.putExtra("markername",marker.getTitle().toString());
         intent1.putExtra("MarkerGoogleID",marker.getId());
         intent1.putExtra("snippet", markerSnippet); //тут буде стрінг, який містить джейсон дані з ключами дескріпшин
-
-
         startActivityForResult(intent1, 1);
+    }
 
+    public class CustomInfoWindowAdapter implements GoogleMap.InfoWindowAdapter {
+        //TODO extract in other class file
+        private View view;
+        public CustomInfoWindowAdapter() {
+            view = getLayoutInflater().inflate(R.layout.custom_infowindow, null);
+        }
+
+        @Override
+        public View getInfoContents(Marker marker) {
+            final String title = marker.getTitle();
+            final TextView titleUi = ((TextView) view.findViewById(R.id.title));
+            if (title != null) {
+                titleUi.setText(title);
+            } else {
+                titleUi.setText("");
+            }
+            final TextView snippetUi = ((TextView) view
+                    .findViewById(R.id.snippet));
+            snippetUi.setText("Touch this to view additional info");
+            return view;
+        }
+
+        @Override
+        public View getInfoWindow(final Marker marker) {
+            //Not used now. For custom view of infowindow
+            final String title = marker.getTitle();
+            final TextView titleUi = ((TextView) view.findViewById(R.id.title));
+            if (title != null) {
+                titleUi.setText(title);
+            } else {
+                titleUi.setText("");
+            }
+            final TextView snippetUi = ((TextView) view
+                    .findViewById(R.id.snippet));
+
+            snippetUi.setText("Touch this to view additional info");
+
+
+            return null;
+        }
     }
 }

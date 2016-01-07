@@ -148,7 +148,7 @@ public class EditActivity extends AppCompatActivity {
             BufferedWriter bw = new BufferedWriter(fw);
             bw.write(outputFile);
             bw.close();
-            Toast.makeText(getApplicationContext(), "File saved successfully",
+            Toast.makeText(getApplicationContext(), "MarkerFile saved successfully",
                     Toast.LENGTH_LONG).show();
         } catch (IOException e) {
             e.printStackTrace();
