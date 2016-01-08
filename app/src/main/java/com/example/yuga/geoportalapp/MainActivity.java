@@ -7,8 +7,6 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
-import android.view.View;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -48,7 +46,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         buildGoogleApiClient();
         googleMap = ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map))
                 .getMap();
-       if ( googleMap != null ) googleMap.setInfoWindowAdapter( new CustomInfoWindowAdapter(this));
+       if ( googleMap != null ) googleMap.setInfoWindowAdapter( new MyInfoWindowAdapter(this));
 
     }
 
