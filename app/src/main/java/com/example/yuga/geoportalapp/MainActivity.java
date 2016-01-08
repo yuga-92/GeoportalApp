@@ -48,7 +48,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         buildGoogleApiClient();
         googleMap = ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map))
                 .getMap();
-       if ( googleMap != null ) googleMap.setInfoWindowAdapter( new CustomInfoWindowAdapter());
+       if ( googleMap != null ) googleMap.setInfoWindowAdapter( new CustomInfoWindowAdapter(this));
 
     }
 
@@ -212,47 +212,5 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         intent1.putExtra("MarkerGoogleID",marker.getId());
         intent1.putExtra("snippet", markerSnippet); //тут буде стрінг, який містить джейсон дані з ключами дескріпшин
         startActivityForResult(intent1, 1);
-    }
-
-    public class CustomInfoWindowAdapter implements GoogleMap.InfoWindowAdapter {
-        //TODO extract in other class file
-        private View view;
-        public CustomInfoWindowAdapter() {
-            view = getLayoutInflater().inflate(R.layout.custom_infowindow, null);
-        }
-
-        @Override
-        public View getInfoContents(Marker marker) {
-            final String title = marker.getTitle();
-            final TextView titleUi = ((TextView) view.findViewById(R.id.title));
-            if (title != null) {
-                titleUi.setText(title);
-            } else {
-                titleUi.setText("");
-            }
-            final TextView snippetUi = ((TextView) view
-                    .findViewById(R.id.snippet));
-            snippetUi.setText("Touch this to view additional info");
-            return view;
-        }
-
-        @Override
-        public View getInfoWindow(final Marker marker) {
-            //Not used now. For custom view of infowindow
-            final String title = marker.getTitle();
-            final TextView titleUi = ((TextView) view.findViewById(R.id.title));
-            if (title != null) {
-                titleUi.setText(title);
-            } else {
-                titleUi.setText("");
-            }
-            final TextView snippetUi = ((TextView) view
-                    .findViewById(R.id.snippet));
-
-            snippetUi.setText("Touch this to view additional info");
-
-
-            return null;
-        }
     }
 }
