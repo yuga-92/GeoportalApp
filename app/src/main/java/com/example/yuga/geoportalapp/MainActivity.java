@@ -27,7 +27,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 public class MainActivity extends AppCompatActivity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, GoogleMap.OnMarkerClickListener, GoogleMap.OnMapClickListener, GoogleMap.OnMapLongClickListener, GoogleMap.OnInfoWindowClickListener {
-//TODO extract Google Play Services in other class file
+//TODO extract Google Play Services in other class file...
     private static final int ERROR_DIALOG_REQUEST = 1;
     //map object
     GoogleMap mMap;

@@ -13,6 +13,7 @@ public class MarkerFile {
 
     public static void fileRead (){
         try {
+            //todo change this
             java.io.File myFile = new java.io.File(Environment.getExternalStorageDirectory().getPath()+"/mysdfile.txt");
             FileInputStream fIn = new FileInputStream(myFile);
             BufferedReader myReader = new BufferedReader(
