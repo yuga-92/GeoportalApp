@@ -6,15 +6,16 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class JsonParcer {
+public class JsonParser {
     static JSONArray jsArr;
     static JSONObject snippetOBJ= new JSONObject();
 
-    public static JSONArray parceToOutput(JSONObject snippetOBJ, MarkerOptions marker) {
+    public static JSONArray parseToOutput(JSONObject snippetOBJ, MarkerOptions marker) {
 
 
         try {
-            jsArr = new JSONArray(MarkerFile.markersData);
+            if (MarkerFile.getMarkersData() !="") jsArr = new JSONArray(MarkerFile.getMarkersData());
+            else jsArr = new JSONArray();
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -46,8 +47,12 @@ public class JsonParcer {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        jsArr.put(jsObj1);
+       jsArr.put(jsObj1);
+
         return jsArr;
     }
+
+
+
 
 }

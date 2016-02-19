@@ -26,6 +26,10 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
+
 public class MainActivity extends AppCompatActivity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, GoogleMap.OnMarkerClickListener, GoogleMap.OnMapClickListener, GoogleMap.OnMapLongClickListener, GoogleMap.OnInfoWindowClickListener {
 //TODO extract Google Play Services in other class file...
     private static final int ERROR_DIALOG_REQUEST = 1;
@@ -35,14 +39,20 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
     //Location object used for getting latitude and longitude
     Location mLastLocation;
     String markerID;
-    String outputFile;
+    String outputDataToFile;
     private GoogleMap googleMap;
+
+    Map <Marker, Long> markers = new HashMap<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        MarkerFile.fileRead();
+        try {
+            MarkerFile.fileRead();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         buildGoogleApiClient();
         googleMap = ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map))
                 .getMap();
@@ -116,7 +126,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
                     mMap.setOnMapLongClickListener(this);
                     mMap.setOnInfoWindowClickListener(this);
                     try {
-                        vievMarkers();
+                        viewMarkers();
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
@@ -135,9 +145,9 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         Log.d("GettingLocation", "onConnectionFailed");
     }
 
-    public  void vievMarkers () throws JSONException {
+    public  void viewMarkers() throws JSONException {
         JSONArray jsonArray;
-        jsonArray = new JSONArray(MarkerFile.markersData);
+        jsonArray = new JSONArray(MarkerFile.getMarkersData());
         for (int i = 0; i < jsonArray.length(); i++) {
             JSONObject jsonObj = jsonArray.getJSONObject(i);
             mMap.addMarker(new MarkerOptions()
@@ -177,7 +187,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
     @Override
     public void onMapLongClick(LatLng latLng) {
         try {
-            JsonParcer.snippetOBJ.put("clean", "clean");
+            JsonParser.snippetOBJ.put("clean", "clean");
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -185,11 +195,13 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         marker = new MarkerOptions()
                 .title("New marker at "+latLng.toString())
                 .position(latLng)
-                .snippet(String.valueOf(JsonParcer.snippetOBJ))
+                .snippet(String.valueOf(JsonParser.snippetOBJ))
                 .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));
         mMap.addMarker(marker);
-        outputFile = JsonParcer.parceToOutput(JsonParcer.snippetOBJ,marker).toString();
-        MarkerFile.fileWrite(outputFile);
+
+            outputDataToFile = JsonParser.parseToOutput(JsonParser.snippetOBJ, marker).toString();
+            MarkerFile.fileWrite(outputDataToFile);
+
     }
 
     @Override

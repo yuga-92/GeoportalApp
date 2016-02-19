@@ -4,4 +4,9 @@
     <string name="title_activity_marker_info">marker_info</string>
     <string name="title_activity_Edit_activity">Edit_markers_data</string>
     <string name="markerDescriptionString">Touch this to view additional info</string>
+    <string name="markerNameMSG">Enter marker name (left empty to not change):</string>
+    <string name="edtActFirstFieldHint">The first field is the name of the parameter.</string>
+    <string name="edtActSecondFieldHint">The second field is the value of this parameter.</string>
+    <string name="edtActCleanDescriptionHint">To remove the description in the file - just delete the text from the field and save the file.</string>
+    <string name="edtActParamHint">. Parameter:</string>
 </resources>
