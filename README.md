@@ -6,5 +6,5 @@ There are 1 bug: when edit and save markers data and return to map - data not ch
 Also i will add REST support to this APP after i refactor the main code to the correct appearance and fix all bugs.
 
 
-<b>There is mysdfile.txt in project folder. This file must be placed on internal storage for correct working of program.
-In future i will fix this moment.</b>
+<strike>There is mysdfile.txt in project folder. This file must be placed on internal storage for correct working of program.
+In future i will fix this moment.</strike>
