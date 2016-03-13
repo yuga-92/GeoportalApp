@@ -38,7 +38,7 @@ public class EditActivity extends AppCompatActivity {
         markerEdit();
     }
 
-    public void close1_click(View v){
+    public void editCloseClick(View v){
         Intent intent2 = new Intent();
         intent2.putExtra("name", "From Edit");
         setResult(1, intent2);
@@ -93,7 +93,7 @@ public class EditActivity extends AppCompatActivity {
         }
     }
 
-    public void save_click(View v) throws JSONException {
+    public void saveClick(View v) throws JSONException {
         String inputFile = null;
         String outputFile = "";
         try {
@@ -103,6 +103,8 @@ public class EditActivity extends AppCompatActivity {
         }
         outputFile = replaceMarkerData(inputFile, outputFile);
         MarkerFile.fileWrite(outputFile);
+        Intent intent = new Intent();
+        intent.putExtra("MarkerTitle",markerName.getText());
     }
 
     private String replaceMarkerData(String inputFile, String outputFile) throws JSONException {
@@ -129,7 +131,7 @@ public class EditActivity extends AppCompatActivity {
         return outputFile;
     }
 
-    public  void addNewOption(View v){
+    public  void addNewOptionClick(View v){
         LinearLayout layout = (LinearLayout) findViewById(R.id.linlayout2);
         EditText etNewParamName = new EditText(this);
         EditText etNewParamValue = new EditText(this);

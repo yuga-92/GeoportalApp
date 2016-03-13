@@ -32,6 +32,10 @@ import java.util.Map;
 
 public class MainActivity extends AppCompatActivity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, GoogleMap.OnMarkerClickListener, GoogleMap.OnMapClickListener, GoogleMap.OnMapLongClickListener, GoogleMap.OnInfoWindowClickListener {
 //TODO extract Google Play Services in other class file...
+
+    //TODO refresh markers at return from another activity
+    //TODO Do not transfer marker snippet!!! transfer full marker and work with it then receive that marker and update marker infowindow
+
     private static final int ERROR_DIALOG_REQUEST = 1;
     //map object
     GoogleMap mMap;
@@ -40,7 +44,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
     Location mLastLocation;
     String markerID;
     String outputDataToFile;
-    private GoogleMap googleMap;
+    static Marker marker;
 
     Map <Marker, Long> markers = new HashMap<>();
 
@@ -54,10 +58,6 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
             e.printStackTrace();
         }
         buildGoogleApiClient();
-        googleMap = ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map))
-                .getMap();
-       if ( googleMap != null ) googleMap.setInfoWindowAdapter( new MyInfoWindowAdapter(this));
-
     }
 
      protected synchronized void buildGoogleApiClient() {
@@ -84,7 +84,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
             Dialog dialog=GooglePlayServicesUtil.getErrorDialog(isAvailable,this,ERROR_DIALOG_REQUEST);
             dialog.show();
         }else {
-            Toast.makeText(MainActivity.this, "Cannot connnect to mapping Service", Toast.LENGTH_SHORT).show();
+            Toast.makeText(MainActivity.this, "Cannot connect to mapping Service", Toast.LENGTH_SHORT).show();
         }
         return false;
     }
@@ -95,7 +95,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         if (mMap == null) {
             SupportMapFragment mapFragment= (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
             mMap=mapFragment.getMap();
-
+           mMap.setInfoWindowAdapter( new MyInfoWindowAdapter(this));
         }
         return (mMap!=null);
     }
@@ -206,17 +206,28 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        marker.setTitle(getIntent().getStringExtra("MarkerTitle"));
+
+        marker.showInfoWindow();
+        //refresh markers here
+        //result code == 1 means that returned from MarkersInfo activity, data hasn`t changed
+        //result code == 2 means that returned from MarkersInfo, data has changed
+        //result code == 3 means that returned from EditActivity, but info not changed
+        //result code == 4 means that returned from EditActivity, and data has changed
         if (data == null) {return;}
         if (resultCode == 1) {
             String name = data.getStringExtra("message"); //not used yet
+
         }
 
     }
 
     @Override
     public void onInfoWindowClick(Marker marker) {
+        MainActivity.marker = marker;
         Intent intent1 = new Intent(this, MarkerInfo.class);
         String markerSnippet = marker.getSnippet();
+        //intent1.putExtras(marker);
         intent1.putExtra("id", markerID);
         intent1.putExtra("markername",marker.getTitle().toString());
         intent1.putExtra("MarkerGoogleID",marker.getId());

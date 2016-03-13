@@ -58,9 +58,6 @@ public class MarkerInfo extends AppCompatActivity {
     //І виводжу в окремі текст в'ю
 
     public void viewMarkerInfo (){
-        //TextView txtData;
-        // txtData = (TextView) findViewById(R.id.txtData);
-        // txtData.setText(markerSnippetReceived);
 
         JSONObject jsObj = null;
         try {
