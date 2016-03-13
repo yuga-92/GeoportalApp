@@ -2,11 +2,7 @@ apply plugin: 'com.android.application'
 
 android {
     signingConfigs {
-        keystore {
-            keyAlias 'keystore'
-            keyPassword 'u1f9k9b2x28'
-            storeFile file('/Users/YuGa/mekeystore.jks')
-            storePassword 'u1f9k9b2x28'
+        yuga_keystore {
         }
     }
     compileSdkVersion 23
@@ -27,7 +23,7 @@ android {
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile fileTree(include: ['*.jar'], dir: 'libs')
     testCompile 'junit:junit:4.12'
     compile 'com.android.support:appcompat-v7:23.1.0'
     compile 'com.google.android.gms:play-services:8.1.0'
