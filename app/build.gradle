@@ -3,6 +3,10 @@ apply plugin: 'com.android.application'
 android {
     signingConfigs {
         yuga_keystore {
+            keyAlias 'key'
+            keyPassword 'u1f9k9b2x28'
+            storeFile file('C:/Users/yuga9/yuga_keystore.jks')
+            storePassword 'u1f9k9b2x28'
         }
     }
     compileSdkVersion 23
